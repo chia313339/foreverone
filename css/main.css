@@ -1,0 +1,297 @@
+@import url(https://fonts.googleapis.com/css?family=Noto+Serif+JP:600);
+@import url(https://fonts.googleapis.com/css?family=Noto+Sans+TC);
+@import "bootstrap.min.css";
+@import "swiper-bundle.min.css";
+@media (max-width: 575px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+body {
+  font-family: "Noto Sans TC", sans-serif;
+  color: #ffffff;
+  background-color: black;
+}
+
+img {
+  max-width: 100%;
+}
+
+section {
+  padding: 70px 0;
+}
+section .row {
+  position: relative;
+}
+@media (max-width: 768px) {
+  section {
+    padding-bottom: 30px;
+  }
+}
+
+.hero {
+    position: relative;
+}
+
+.section1_com {
+    position: absolute;
+    top: 5%;
+    width: 20%;
+    z-index: 1;
+}
+
+.section1_logo {
+    position: absolute;
+    top: 15%;
+    width: 100vw;
+    z-index: 1;
+}
+.section_back{
+    position: relative;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.section{
+    display: flex;
+    justify-content: center;
+}
+
+.section2_text{
+    position: absolute;
+    top: 1%;
+    width: 50%;
+    z-index: 1;
+}
+
+.carousel-item {
+    width: 100vw; /* 全屏高度 */
+}
+
+.carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.carousel-caption {
+    position: absolute;
+    bottom: 5%;
+    right: -40%;
+    color: white;
+    font-size: 1vw;
+}
+
+video {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 確保影片填滿容器而不變形 */
+    display: block; /* 移除可能的內聯間距 */
+  }
+
+
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* 在較大屏幕上保持全屏高度 */
+    max-height: 100vw; /* 限制最大高度為視窗寬度,適用於手機 */
+    overflow: hidden;
+  }
+
+
+
+.form {
+padding: 20px 0 100px 0;
+}
+
+.form_item {
+margin-bottom: 20px;
+}
+
+.form-check {
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-pack: center;
+    -ms-flex-pack: center;
+        justify-content: center;
+}
+.form-check a {
+text-decoration: none;
+color: #c43c27;
+}
+
+.form-control,
+.form-select {
+border: 0;
+border-radius: 2px;
+-webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.07);
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.07);
+padding: 0.7rem 1.3rem;
+}
+
+textarea.form-control {
+border-radius: 2px;
+}
+
+.checkmark {
+position: absolute;
+top: 0;
+left: 0;
+height: 25px;
+width: 25px;
+background-color: #eee;
+border: 1px solid #d3d3d3;
+border-radius: 100px;
+}
+
+.checkbox_item {
+position: relative;
+cursor: pointer;
+-webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+        user-select: none;
+padding-left: 2rem;
+}
+.checkbox_item a {
+text-decoration: none;
+color: #C39B62;
+}
+
+.checkbox_item input {
+position: absolute;
+opacity: 0;
+cursor: pointer;
+height: 0;
+width: 0;
+}
+
+.checkbox_item:hover input ~ .checkmark {
+background-color: #ccc;
+}
+
+.checkbox_item input:checked ~ .checkmark {
+background-color: #3a3a3a;
+border-radius: 3px;
+}
+
+.checkmark:after {
+content: "";
+position: absolute;
+display: none;
+}
+
+.checkbox_item input:checked ~ .checkmark:after {
+display: block;
+}
+
+.checkbox_item .checkmark:after {
+left: 8px;
+top: 3px;
+width: 7px;
+height: 13px;
+border: solid white;
+border-width: 0 3px 3px 0;
+-webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+}
+
+.btn-primary {
+background: #C39B62;
+border-color: #C39B62;
+border-radius: 100px;
+}
+.btn-primary:hover, .btn-primary:focus {
+background: #93754b;
+border-color: #93754b;
+}
+
+.contact_btn {
+display: -webkit-box;
+display: -ms-flexbox;
+display: flex;
+-webkit-box-align: center;
+    -ms-flex-align: center;
+        align-items: center;
+background: #fff;
+border-radius: 12px;
+-webkit-box-pack: center;
+    -ms-flex-pack: center;
+        justify-content: center;
+padding: 18px 12px;
+color: #000;
+text-decoration: none;
+height: 100%;
+-webkit-transition: 0.4s ease;
+transition: 0.4s ease;
+}
+.contact_btn img {
+height: 32px;
+margin-right: 12px;
+-webkit-filter: brightness(1);
+        filter: brightness(1);
+-webkit-transition: 0.4s ease;
+transition: 0.4s ease;
+}
+@media (max-width: 575px) {
+.contact_btn img {
+    height: 24px;
+    margin-right: 8px;
+}
+}
+
+a.contact_btn:hover {
+background: #93754b;
+color: #fff;
+}
+a.contact_btn:hover img {
+-webkit-filter: brightness(10);
+        filter: brightness(10);
+}
+
+
+.modal .modal-body {
+padding: 32px;
+}
+.modal .modal-body h3 {
+font-size: 1.1rem;
+color: #93754b;
+font-weight: bold;
+margin-top: 2rem;
+}
+.modal .modal-body li {
+margin-bottom: 8px;
+color: #000;
+}
+.modal .modal-body p {
+color: #000;
+}
+@media (max-width: 992px) {
+.modal .modal-body {
+    padding: 24px;
+}
+}
+@media (max-width: 768px) {
+.modal .modal-body {
+    padding: 16px;
+}
+}
+
+.map-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh; /* 可以根据需要调整高度 */
+}
+
+.map-container iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
