@@ -1,0 +1,8 @@
+# Firebase 部署快取（不需版控）
+.firebase/
+
+# macOS
+.DS_Store
+
+# 依賴
+node_modules/

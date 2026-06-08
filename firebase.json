@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "target": "foreverone",
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      ".firebaserc",
+      "**/.*",
+      "**/node_modules/**",
+      "Dockerfile",
+      "p.py",
+      "package-lock.json",
+      "README.md",
+      "FIREBASE_DEPLOY.md"
+    ]
+  }
+}
