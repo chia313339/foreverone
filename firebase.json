@@ -8,10 +8,36 @@
       "**/.*",
       "**/node_modules/**",
       "Dockerfile",
-      "p.py",
+      "optimize_images.py",
       "package-lock.json",
       "README.md",
-      "FIREBASE_DEPLOY.md"
+      "FIREBASE_DEPLOY.md",
+      "CLAUDE.md",
+      "img/**/*.png",
+      "img/*.mp4",
+      "img/*.webm",
+      "js/swiper-bundle.min.js",
+      "css/swiper-bundle.min.css"
+    ],
+    "headers": [
+      {
+        "source": "**/*.@(jpg|jpeg|gif|png|webp|svg|ico|woff|woff2|mp4|webm)",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=604800" }
+        ]
+      },
+      {
+        "source": "**/*.@(js|css)",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=604800" }
+        ]
+      },
+      {
+        "source": "**/*.html",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=3600" }
+        ]
+      }
     ]
   }
 }

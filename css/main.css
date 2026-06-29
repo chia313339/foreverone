@@ -1,7 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Noto+Serif+JP:600);
 @import url(https://fonts.googleapis.com/css?family=Noto+Sans+TC);
 @import "bootstrap.min.css";
-@import "swiper-bundle.min.css";
 @media (max-width: 575px) {
   html {
     font-size: 14px;

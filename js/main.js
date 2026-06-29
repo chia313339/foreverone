@@ -9,15 +9,6 @@ document.addEventListener('contextmenu', function(event) {
     event.preventDefault();
 });
 
-document.addEventListener('DOMContentLoaded', (event) => {
-    const video = document.getElementById('myVideo');
-    video.play().catch((error) => {
-        console.log('Autoplay was prevented:', error);
-    });
-});
-
-
-
 let submitted = false;
 
 function showSuccessMessage() {
@@ -40,11 +31,18 @@ $('#sendMail').click(function (e) {
             confirmButtonColor: "#b0964e",
         });
     } else {
-        let phone = $('#phone').val();
-        let iphone = parseInt(phone);
-        if (isNaN(iphone)) {
+        let phone = $('#phone').val().replace(/\D/g, '');
+        let email = $('#email').val().trim();
+        if (phone.length < 8) {
             Swal.fire({
                 title: '請輸入正確的電話號碼',
+                icon: 'warning',
+                confirmButtonText: '繼續填寫',
+                confirmButtonColor: "#b0964e",
+            });
+        } else if (email !== '' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            Swal.fire({
+                title: '請輸入正確的 E-mail',
                 icon: 'warning',
                 confirmButtonText: '繼續填寫',
                 confirmButtonColor: "#b0964e",

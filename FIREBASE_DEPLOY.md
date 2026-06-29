@@ -27,7 +27,14 @@
 ### `firebase.json`
 - `hosting.target = "foreverone"` — 只部署到此 target（不會誤觸其他站台）。
 - `hosting.public = "."` — 以專案根目錄作為網站內容。
-- `hosting.ignore` — 排除設定檔、隱藏檔、`node_modules`、`Dockerfile`、`p.py`、`package-lock.json`、`README.md`、`FIREBASE_DEPLOY.md`。
+- `hosting.ignore` — 排除設定檔、隱藏檔、`node_modules`、`Dockerfile`、`optimize_images.py`、`package-lock.json`、`README.md`、`FIREBASE_DEPLOY.md`、`CLAUDE.md`，以及為了**降低流量／部署量**而排除的：
+  - `img/**/*.png`（原始素材，正式只上 `.webp`）
+  - `img/*.mp4`、`img/*.webm`（已停用的影片，約 78MB）
+  - `js/swiper-bundle.min.js`、`css/swiper-bundle.min.css`（已不載入）
+- `hosting.headers` — 快取標頭：圖片／JS／CSS `max-age=604800`（7 天）、HTML `max-age=3600`（1 小時），降低回訪流量。
+  - ⚠️ 檔名固定無 hash，更新圖片後 7 天內回訪者可能看到舊版；要立即生效可改檔名。
+
+> 圖片最佳化（PNG→WebP）流程見 `CLAUDE.md` 的「流量／圖片最佳化」一節，工具為 `optimize_images.py`。
 
 ## 部署指令
 
