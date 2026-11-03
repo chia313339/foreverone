@@ -18,7 +18,8 @@
       "img/*.webm",
       "js/swiper-bundle.min.js",
       "css/swiper-bundle.min.css",
-      ".dockerignore"
+      ".dockerignore",
+      ".claude/**"
     ],
     "headers": [
       {
