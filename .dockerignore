@@ -1,0 +1,16 @@
+.git
+.firebase
+.DS_Store
+.claude
+img/**/*.png
+img/*.mp4
+img/*.webm
+js/swiper-bundle.min.js
+css/swiper-bundle.min.css
+Dockerfile
+.dockerignore
+firebase.json
+.firebaserc
+optimize_images.py
+package-lock.json
+*.md

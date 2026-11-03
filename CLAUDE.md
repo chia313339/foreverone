@@ -1,7 +1,7 @@
 # CLAUDE.md — 恆ONE 建案行銷網站
 
 > 本檔記錄專案重點架構，供日後（含 Claude）快速進入狀況。
-> 最後更新：2026-06-29
+> 最後更新：2026-11-03
 
 ## 專案簡介
 
@@ -10,7 +10,7 @@
 - **建案**：恆ONE｜經國河灣中心 ESG超級商辦
 - **業主**：中悅建設
 - **性質**：純靜態網站（HTML / CSS / JS / 圖片），**無框架、無建置流程（build step）、無自有後端**
-- **正式網址**：https://foreverone.web.app
+- **正式網址**：https://foreverone.com.tw/（自訂網域，canonical）；另有 https://foreverone.web.app
 - **GitHub**：https://github.com/chia313339/foreverone
 
 ## 技術棧
@@ -82,7 +82,10 @@ Google 試算表「恆ONE (回覆)」
 Google Apps Script  ── onFormSubmit 觸發器（表單提交時自動執行，推測為寄通知信給業務）
 ```
 
-- **前端送出**：`js/main.js` 驗證後用 jQuery AJAX POST 到 Google 表單。
+- **前端送出**：`js/main.js` 驗證後用 `fetch(..., { mode: 'no-cors' })` POST 到 Google 表單。
+  - Google 表單不回 CORS 標頭，無法讀回應：請求送達即顯示成功，網路失敗才顯示「送出失敗」。
+  - 送出中會鎖住按鈕防重複送出，成功後清空表單並 `dataLayer.push({ event: 'form_submit_success' })`（GTM 需建自訂事件觸發條件才會記到轉換）。
+  - 隱藏欄位 `#hp_check` 為防機器人 honeypot：有值就假裝成功、不送出。
   - Form endpoint：`https://docs.google.com/forms/u/0/d/e/1FAIpQLSeVoxicRPBWg7ZgqDQMCQTLeNj8Zeslqjs83FWo3e11dXJ4gg/formResponse`
   - 欄位對應（entry ID）：
     | 欄位 | entry ID |
@@ -112,6 +115,7 @@ firebase deploy --only hosting:foreverone --project dwtlung
 - **快取標頭**：圖片／JS／CSS `max-age=604800`（7 天）、HTML `max-age=3600`（1 小時）→ 大幅降低回訪流量。
 - **部署排除**：`img/**/*.png`（原始素材不上線）、`img/*.mp4`、`img/*.webm`（已停用影片）、swiper 檔。
   → 實際上線內容從約 135MB 降到約 3MB。
+- ⚠️ **改 `css/main.css` 或 `js/main.js` 後，務必同步更新 `index.html` 引用處的 `?v=日期`**，否則回訪者 7 天內會拿到舊 CSS/JS 搭配新 HTML。
 - ⚠️ 因檔名固定（無 hash），更新某張圖後，7 天內回訪者可能看到舊圖；要立即生效可改檔名或暫時調低該檔 `max-age`。
 
 ## 本機預覽
@@ -134,6 +138,18 @@ firebase deploy --only hosting:foreverone --project dwtlung
 
 > 若仍要再降流量，可考慮：將 Bootstrap/jQuery 改用 CDN（不佔 Firebase 流量）、或把目前由 CDN 載入的 AOS/SweetAlert2 維持外部載入（現況已是外部，不佔流量）。
 
+## 已修正項目（2026-11-03）
+
+- ✅ 表單：原 jQuery `complete` 會蓋掉 `error`，斷線也顯示成功 → 改 fetch no-cors；加防重複送出、送出後清空、honeypot、GTM 轉換事件。
+- ✅ 真正清除表單 input 重複的 `id=""`（6/29 記錄有寫但當時未改到）。
+- ✅ SEO：canonical、og:url、og:image 改絕對網址 `img/meta.jpg`（LINE/FB 相容）、改寫 meta description；新增 `robots.txt`、`sitemap.xml`。
+- ✅ 手機字級：文案改用 `.intro_title` / `.intro_text`（`max(rem, vw)` 設下限），移除 viewport 的 `maximum-scale=1`。
+- ✅ 效能：CSS 不再用 `@import` 串連，改在 `<head>` 用 `<link>` + preconnect；移除未使用的 Noto Serif JP；YouTube iframe 加 `loading="lazy"`；滿版圖與輪播圖加 `width`/`height` 避免版面跳動。
+- ✅ 安全：`firebase.json` 加 `X-Content-Type-Options`、`X-Frame-Options`、`Referrer-Policy`；CDN 的 AOS／SweetAlert2 加 SRI。
+- ✅ Dockerfile `EXPOSE 80`，新增 `.dockerignore` 排除原始素材與 .git。
+- ✅ 新增「企劃銷售 | 上豪邁實業股份有限公司」（`.form_credit`）：位於 section10 圖下方、地圖上方，上下 30px、左右 50px，字級 `min(5rem, calc((100vw - 100px) / 16))`：寬螢幕固定 5rem，視窗變窄時自動縮小、維持一列。
+- ✅ 隱私權聲明錯字「中悦」→「中悅」。
+
 ## 已修正項目（2026-06-29）
 
 - ✅ 移除 `main.js` 會報錯的 `myVideo` 死碼（影片已改 YouTube iframe）。
@@ -144,6 +160,10 @@ firebase deploy --only hosting:foreverone --project dwtlung
 - ✅ `p.py`（Windows 專用、不可重跑）→ 改為 `optimize_images.py`（macOS 可重跑）。
 
 ## 待辦 / 可再優化
+
+- ⚠️ `https://www.foreverone.com.tw` DNS 已指到 Firebase 但**未加入自訂網域**，憑證不含 www → 瀏覽器會跳安全警告。需在 Firebase Console → Hosting → foreverone → 新增自訂網域 `www.foreverone.com.tw` 並設為導向主網域。
+- git 歷史中仍有約 82MB 的 `one_vedio.*`（已停用），要瘦身需改寫歷史，暫不處理。
+- 右鍵禁止目前保留（未確認是否為業主要求），實際上無法防止存圖。
 
 - webp 仍無 `<picture>` 對 `.png` 的 fallback；目前所有目標瀏覽器皆支援 webp（2020 後全面支援），影響極小，暫不處理。
 - 若日後要支援極舊瀏覽器，再考慮 `<picture>` + `.png` fallback（但會讓 png 需重新納入部署）。

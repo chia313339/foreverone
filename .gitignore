@@ -6,3 +6,4 @@
 
 # 依賴
 node_modules/
+.claude/
