@@ -4,7 +4,218 @@ document.addEventListener('DOMContentLoaded', function() {
         offset: 60
     });
     initAerialVideo();
+    initPano();
 });
+
+// 區位全景圖：拖曳環視、滾輪／雙指縮放、開啟時自動對焦恆ONE、可自動環視
+function initPano() {
+    const modal = document.getElementById('modalPano');
+    if (!modal) return;
+    const stage = document.getElementById('panoStage');
+    const img = document.getElementById('panoImg');
+    const loading = document.getElementById('panoLoading');
+    const hint = document.getElementById('panoHint');
+    const tourBtn = modal.querySelector('[data-pano="tour"]');
+
+    const IW = 4535, IH = 2551;          // 原圖尺寸
+    const FOCUS = { x: 2954, y: 1030 };   // 恆ONE（上方 Logo ~ 下方大樓）的中心
+    const MAX_SCALE = 2;
+
+    let s = 1, tx = 0, ty = 0;           // 圖上 (x,y) → 畫面 (x*s+tx, y*s+ty)
+    let anim = null, inertia = null, tour = null, tourDir = 1;
+    let ready = false;
+
+    function W() { return stage.clientWidth; }
+    function H() { return stage.clientHeight; }
+    function minScale() { return Math.max(W() / IW, H() / IH); }   // 圖永遠蓋滿畫面
+    function focusScale() {
+        return Math.min(MAX_SCALE, Math.max(minScale() * 1.3, W() / 2200, H() / 1480));
+    }
+
+    function clamp(state) {
+        const sc = Math.min(MAX_SCALE, Math.max(minScale(), state.s));
+        return {
+            s: sc,
+            tx: Math.min(0, Math.max(W() - IW * sc, state.tx)),
+            ty: Math.min(0, Math.max(H() - IH * sc, state.ty))
+        };
+    }
+    function apply(state) {
+        const c = clamp(state);
+        s = c.s; tx = c.tx; ty = c.ty;
+        img.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + s + ')';
+    }
+    function centerOn(x, y, sc) {
+        return { s: sc, tx: W() / 2 - x * sc, ty: H() / 2 - y * sc };
+    }
+    function zoomAt(px, py, factor) {
+        const ns = Math.min(MAX_SCALE, Math.max(minScale(), s * factor));
+        const ix = (px - tx) / s, iy = (py - ty) / s;
+        return { s: ns, tx: px - ix * ns, ty: py - iy * ns };
+    }
+
+    function stopAll() {
+        if (anim) cancelAnimationFrame(anim), anim = null;
+        if (inertia) cancelAnimationFrame(inertia), inertia = null;
+        setTour(false);
+    }
+    function animateTo(target, ms) {
+        if (anim) cancelAnimationFrame(anim);
+        const from = { s: s, tx: tx, ty: ty };
+        const to = clamp(target);
+        const t0 = performance.now();
+        (function step(now) {
+            const p = Math.min(1, (now - t0) / ms);
+            const e = 1 - Math.pow(1 - p, 3);   // easeOutCubic
+            apply({
+                s: from.s + (to.s - from.s) * e,
+                tx: from.tx + (to.tx - from.tx) * e,
+                ty: from.ty + (to.ty - from.ty) * e
+            });
+            anim = p < 1 ? requestAnimationFrame(step) : null;
+        })(t0);
+    }
+
+    function setTour(on) {
+        if (!tourBtn) return;
+        tourBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+        if (tour) cancelAnimationFrame(tour), tour = null;
+        if (!on) return;
+        let last = performance.now();
+        (function step(now) {
+            const dt = Math.min(50, now - last); last = now;
+            const before = tx;
+            apply({ s: s, tx: tx - tourDir * dt * 0.06, ty: ty });
+            if (tx === before) tourDir = -tourDir;   // 到邊緣就折返
+            tour = requestAnimationFrame(step);
+        })(last);
+    }
+
+    function hideHint() { hint.classList.add('hide'); }
+
+    // 開啟：載入圖片 → 先看全圖 → 鏡頭推進到恆ONE
+    modal.addEventListener('shown.bs.modal', function () {
+        hint.classList.remove('hide');
+        setTimeout(hideHint, 3500);
+        function start() {
+            ready = true;
+            loading.style.display = 'none';
+            apply(centerOn(IW / 2, IH / 2, minScale()));
+            setTimeout(function () { animateTo(centerOn(FOCUS.x, FOCUS.y, focusScale()), 1600); }, 250);
+        }
+        if (!img.getAttribute('src')) {
+            img.addEventListener('load', start, { once: true });
+            img.src = img.dataset.src;
+        } else {
+            start();
+        }
+    });
+    modal.addEventListener('hidden.bs.modal', stopAll);
+    window.addEventListener('resize', function () { if (ready) apply({ s: s, tx: tx, ty: ty }); });
+
+    // 拖曳（含慣性）＋雙指縮放
+    const pointers = new Map();
+    let lastPinch = null, vel = { x: 0, y: 0 }, lastMove = 0;
+
+    stage.addEventListener('pointerdown', function (e) {
+        if (!ready) return;
+        stopAll(); hideHint();
+        stage.setPointerCapture(e.pointerId);
+        pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        stage.classList.add('dragging');
+        vel = { x: 0, y: 0 }; lastMove = performance.now();
+        lastPinch = null;
+    });
+    stage.addEventListener('pointermove', function (e) {
+        if (!pointers.has(e.pointerId)) return;
+        const prev = pointers.get(e.pointerId);
+        const cur = { x: e.clientX, y: e.clientY };
+        pointers.set(e.pointerId, cur);
+        if (pointers.size === 1) {
+            const dx = cur.x - prev.x, dy = cur.y - prev.y;
+            const now = performance.now(), dt = Math.max(1, now - lastMove);
+            vel = { x: dx / dt, y: dy / dt }; lastMove = now;
+            apply({ s: s, tx: tx + dx, ty: ty + dy });
+        } else if (pointers.size === 2) {
+            const [a, b] = Array.from(pointers.values());
+            const dist = Math.hypot(a.x - b.x, a.y - b.y);
+            const rect = stage.getBoundingClientRect();
+            const mid = { x: (a.x + b.x) / 2 - rect.left, y: (a.y + b.y) / 2 - rect.top };
+            if (lastPinch) {
+                const z = zoomAt(mid.x, mid.y, dist / lastPinch.dist);
+                apply({ s: z.s, tx: z.tx + mid.x - lastPinch.mid.x, ty: z.ty + mid.y - lastPinch.mid.y });
+            }
+            lastPinch = { dist: dist, mid: mid };
+        }
+    });
+    function endPointer(e) {
+        if (!pointers.has(e.pointerId)) return;
+        pointers.delete(e.pointerId);
+        lastPinch = null;
+        if (pointers.size) return;
+        stage.classList.remove('dragging');
+        if (performance.now() - lastMove > 80) return;    // 停住再放開就不滑
+        let vx = vel.x * 16, vy = vel.y * 16;
+        (function glide() {
+            vx *= 0.92; vy *= 0.92;
+            apply({ s: s, tx: tx + vx, ty: ty + vy });
+            inertia = (Math.abs(vx) > 0.3 || Math.abs(vy) > 0.3) ? requestAnimationFrame(glide) : null;
+        })();
+    }
+    stage.addEventListener('pointerup', endPointer);
+    stage.addEventListener('pointercancel', endPointer);
+
+    // 滾輪縮放（以游標為中心）
+    stage.addEventListener('wheel', function (e) {
+        if (!ready) return;
+        e.preventDefault();
+        stopAll(); hideHint();
+        const rect = stage.getBoundingClientRect();
+        apply(zoomAt(e.clientX - rect.left, e.clientY - rect.top, Math.exp(-e.deltaY * 0.0015)));
+    }, { passive: false });
+
+    // 雙擊放大
+    stage.addEventListener('dblclick', function (e) {
+        if (!ready) return;
+        stopAll();
+        const rect = stage.getBoundingClientRect();
+        animateTo(zoomAt(e.clientX - rect.left, e.clientY - rect.top, 1.8), 500);
+    });
+
+    // 工具列
+    modal.querySelector('.pano-tools').addEventListener('click', function (e) {
+        const btn = e.target.closest('[data-pano]');
+        if (!btn || !ready) return;
+        const act = btn.dataset.pano;
+        hideHint();
+        if (act === 'tour') {
+            const on = btn.getAttribute('aria-pressed') !== 'true';
+            if (anim) cancelAnimationFrame(anim), anim = null;
+            if (on && s < focusScale() * 0.95) {      // 太遠時先推近再環視
+                animateTo(centerOn((W() / 2 - tx) / s, FOCUS.y, focusScale()), 700);
+                setTimeout(function () { setTour(true); }, 720);
+            } else {
+                setTour(on);
+            }
+            return;
+        }
+        stopAll();
+        if (act === 'in') animateTo(zoomAt(W() / 2, H() / 2, 1.5), 350);
+        if (act === 'out') animateTo(zoomAt(W() / 2, H() / 2, 1 / 1.5), 350);
+        if (act === 'focus') animateTo(centerOn(FOCUS.x, FOCUS.y, focusScale()), 900);
+        if (act === 'all') animateTo(centerOn(IW / 2, IH / 2, minScale()), 900);
+    });
+
+    // 鍵盤：方向鍵移動、+/- 縮放
+    modal.addEventListener('keydown', function (e) {
+        if (!ready) return;
+        const step = 80;
+        const map = { ArrowLeft: [step, 0], ArrowRight: [-step, 0], ArrowUp: [0, step], ArrowDown: [0, -step] };
+        if (map[e.key]) { stopAll(); animateTo({ s: s, tx: tx + map[e.key][0], ty: ty + map[e.key][1] }, 200); e.preventDefault(); }
+        if (e.key === '+' || e.key === '=') { stopAll(); animateTo(zoomAt(W() / 2, H() / 2, 1.5), 300); }
+        if (e.key === '-') { stopAll(); animateTo(zoomAt(W() / 2, H() / 2, 1 / 1.5), 300); }
+    });
+}
 
 // 空拍影片：捲到附近才載入（省 Firebase 流量），離開畫面就暫停
 function initAerialVideo() {

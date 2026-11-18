@@ -60,7 +60,7 @@ v2 改為「**照片切圖 + 真實 HTML 文字**」：照片上的文案已從�
 
 1. **Header**（sticky）— `logo_header.webp`（透明）+ 貴賓專線／粉絲專頁／線上諮詢／地圖導航／立即預約；手機改為底部固定快捷列 `.mobile-bar`
 2. **Hero** — `hero.webp`（主視覺含文字，整張切圖）
-3. **運｜交通樞紐** — `traffic.webp`（區位標註保留在圖上）+ HTML 文案疊左上
+3. **運｜交通樞紐** — `traffic.webp`（區位標註保留在圖上）+ HTML 文案疊左上；標題旁「展開全景圖」按鈕 → 全螢幕 Modal `#modalPano` 顯示 `pano.webp`（原圖 4535×2551，約 1.6MB，**開啟時才載入**）。可拖曳環視（含慣性）、滾輪／雙指縮放、雙擊放大、方向鍵；開啟時從全圖推近到恆ONE，工具列有＋／－／恆ONE／全圖／環視（自動左右平移）。對焦點與縮放在 `js/main.js` `initPano()` 的 `FOCUS`、`focusScale()`
 4. **能｜能量聚場** — `energy.webp` + 數據圓圈（數字為透明切圖 `stat1~3.webp`，圓框／標籤為 CSS）+ HTML 文案
 5. **勢｜立面神韻** — HTML 文案 + 空拍影片 `video/aerial.mp4`（自架，捲到才載入、離開即暫停，右下有播放/暫停鈕）
 6. **器｜寰宇公設** — HTML 文案 + 三張公設實績照 `amenity1~3.webp`

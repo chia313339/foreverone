@@ -40,7 +40,7 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" integrity="sha384-/rJKQnzOkEo+daG0jMjU1IwwY9unxt1NBw3Ef2fmOJ3PW/TfAg2KXVoWwMZQZtw9" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.0/dist/sweetalert2.min.css" rel="stylesheet" integrity="sha384-QeY5AQZQxuccpv3R7xMnhIyrxSmzwsqI9A8hFrcDhljKd7rfQHZgnTh8gpCM5kWu" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/main.css?v=20261118b">
+    <link rel="stylesheet" href="css/main.css?v=20261118c">
 </head>
 <body>
     <!-- Google Tag Manager (noscript) 程式碼開始 -->
@@ -85,7 +85,13 @@
             <div class="photo-block traffic">
                 <div class="overlay" data-aos="fade-up">
                     <p class="eyebrow">NOW FOREVER ONE</p>
-                    <h2 class="headline" id="h-traffic">執掌陸空經緯 開展事業格局</h2>
+                    <div class="headline-row">
+                        <h2 class="headline" id="h-traffic">執掌陸空經緯 開展事業格局</h2>
+                        <button class="pano-btn" type="button" data-bs-toggle="modal" data-bs-target="#modalPano">
+                            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+                            展開全景圖
+                        </button>
+                    </div>
                     <p class="body-text">近攬國道一號南崁交流道與經國轉運站，坐享往返桃園國際機場的交通優勢。北接雙北商務核心，南貫桃竹苗產業廊帶，經由國際航空門戶，拓展跨國商務版圖，建立統籌全局、運籌四方的企業座標。</p>
                 </div>
                 <img class="photo" src="img/traffic.webp" width="2400" height="1350" loading="lazy"
@@ -217,6 +223,30 @@
         <a href="#booking">預約<small>Booking</small></a>
     </nav>
 
+    <!-- 區位全景圖 Modal（圖片於開啟時才載入；操作邏輯見 js/main.js initPano） -->
+    <div class="modal fade pano-modal" id="modalPano" tabindex="-1" aria-label="中悅恆ONE 區位空拍全景圖">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="pano-stage" id="panoStage">
+                    <img id="panoImg" data-src="img/pano.webp" width="4535" height="2551" alt="中悅恆ONE 區位空拍全景圖：藝文特區、機場系統交流道、國道2號、捷運G12站預定地、幸福水岸公園、經國橋、桃園國際機場、經國轉運站、桃園交流道、國道1號甲線新建工程、北部特定工業區、國道1號" draggable="false">
+                    <div class="pano-loading" id="panoLoading">載入中…</div>
+                </div>
+                <div class="pano-top">
+                    <span class="pano-title">區位全景圖</span>
+                    <button type="button" class="pano-close" data-bs-dismiss="modal" aria-label="關閉">✕</button>
+                </div>
+                <div class="pano-hint" id="panoHint">拖曳環視四周・滾輪或雙指縮放</div>
+                <div class="pano-tools" role="toolbar" aria-label="全景圖操作">
+                    <button type="button" data-pano="in" aria-label="放大">＋</button>
+                    <button type="button" data-pano="out" aria-label="縮小">－</button>
+                    <button type="button" data-pano="focus" aria-label="回到恆ONE">恆ONE</button>
+                    <button type="button" data-pano="all" aria-label="看全圖">全圖</button>
+                    <button type="button" data-pano="tour" aria-label="自動環視" aria-pressed="false">環視</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 「個資告知事項聲明」 Modal -->
     <div class="modal fade" id="modalTerms" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -271,6 +301,6 @@
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" integrity="sha384-wziAfh6b/qT+3LrqebF9WeK4+J5sehS6FA10J1t3a866kJ/fvU5UwofWnQyzLtwu" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.0/dist/sweetalert2.all.min.js" integrity="sha384-5VBAkNWNEnA0Y+L5aWNg6fHumW6MdNSl4unYF6X6pHsXjltAvKa6VxLur8ZAQlzu" crossorigin="anonymous"></script>
-    <script src="js/main.js?v=20261118"></script>
+    <script src="js/main.js?v=20261118c"></script>
 </body>
 </html>
