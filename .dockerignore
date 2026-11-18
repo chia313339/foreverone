@@ -2,6 +2,7 @@
 .firebase
 .DS_Store
 .claude
+img/_old_v1/
 img/**/*.png
 img/*.mp4
 img/*.webm
@@ -12,5 +13,6 @@ Dockerfile
 firebase.json
 .firebaserc
 optimize_images.py
+build_v2_assets.py
 package-lock.json
 *.md

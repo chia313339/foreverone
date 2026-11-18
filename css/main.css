@@ -1,14 +1,21 @@
-@media (max-width: 575px) {
-  html {
-    font-size: 14px;
-  }
+/* =========================================================
+   恆ONE 一頁式網站 v2（2026-11 改版，依設計稿 20261117）
+   設計稿基準寬 4000px；桌機文字疊在照片上，手機改為「文字在上、照片在下」
+   ========================================================= */
+
+:root {
+  --navy: #0c1b38;          /* 設計稿底色 (12,27,56) */
+  --navy-deep: #08142c;
+  --gold: #d6b07a;          /* NOW FOREVER ONE / 書法字 */
+  --yellow: #f5d169;        /* 送出鈕、電話 */
+  --brand: #182c71;         /* Logo 藍 */
+  --line: rgba(255, 255, 255, .55);
+  --header-h: 76px;
 }
 
-body {
-  font-family: "Noto Sans TC", sans-serif;
-  color: #ffffff;
-  background-color: black;
-}
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: var(--header-h); }
 
 html, body {
   overflow-x: hidden;
@@ -17,346 +24,568 @@ html, body {
   padding: 0;
 }
 
-img {
-  max-width: 100%;
+body {
+  font-family: "Noto Sans TC", sans-serif;
+  color: #fff;
+  background-color: var(--navy);
+  -webkit-font-smoothing: antialiased;
+  padding-top: var(--header-h);
 }
 
-section {
-  padding: 70px 0;
-}
-section .row {
-  position: relative;
-}
-@media (max-width: 768px) {
-  section {
-    padding-bottom: 30px;
-  }
-}
+img { max-width: 100%; display: block; }
 
-.hero {
-    position: relative;
-}
+a { color: inherit; }
 
-.section1_com {
-    position: absolute;
-    top: 15%;
-    width: 20%;
-    z-index: 1;
-}
-
-.section1_logo {
-    position: absolute;
-    top: 25%;
-    width: 100vw;
-    z-index: 1;
-}
-.section_back{
-    position: relative;
-    width: 100%;
-    height: auto;
-    margin: 0;
-    padding: 0;
-    display: flex;
-}
-
-.section{
-    display: flex;
-    justify-content: center;
-}
-
-/* 文案段落：桌機維持依視窗寬度縮放，手機設下限避免字太小 */
-.intro_title {
-    font-size: max(1.6rem, 4vw);
-}
-
-.intro_text {
-    font-size: max(1rem, 2vw);
-    padding: 0 16px;
-}
-
-.section2_text{
-    position: absolute;
-    top: 1%;
-    width: 50%;
-    z-index: 1;
-}
-
-.carousel-item {
-    width: 100vw; /* 全屏高度 */
-}
-
-.carousel-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-}
-
-.carousel-caption {
-    position: absolute;
-    bottom: 5%;
-    right: -40%;
-    color: white;
-    font-size: 1vw;
-}
-
-video {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* 確保影片填滿容器而不變形 */
-    display: block; /* 移除可能的內聯間距 */
-  }
-
-
-.video-container {
-    position: relative;
-    width: 100%;
-    height: 100vh; /* 在較大屏幕上保持全屏高度 */
-    max-height: 100vw; /* 限制最大高度為視窗寬度,適用於手機 */
-    overflow: hidden;
-    margin-top: 0;
-    margin-bottom: 0;
-  }
-  
-
-.video-wrapper {
-  position: absolute;
+/* ---------- Header ---------- */
+/* 桌機：導覽列固定置頂（body 有 overflow-x:hidden，sticky 會失效，故用 fixed + body 預留高度） */
+.site-header {
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none; /* 防止 iPhone 上的全屏按鈕 */
+  right: 0;
+  z-index: 100;
+  height: var(--header-h);
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #eef1f3 0%, #dfe3e8 35%, #c4cad4 60%, #cfd3db 85%, #f6f7f8 100%);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .25);
 }
 
-.video-wrapper iframe {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100vw;
-  min-height: 100vh;
-  min-width: 177.77vh; /* 100 * 16 / 9 */
-  transform: translate(-50%, -50%);
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-left: 4%;
+  text-decoration: none;
+}
+
+.brand img { height: 36px; width: auto; }
+
+.brand span {
+  color: var(--brand);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .38em;
+  white-space: nowrap;
+}
+
+.site-nav { display: flex; }
+
+.site-nav a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 128px;
+  padding: 0 14px;
+  border-left: 1px solid rgba(255, 255, 255, .75);
+  color: var(--brand);
+  text-decoration: none;
+  line-height: 1.35;
+  transition: background-color .2s;
+}
+
+.site-nav a:hover { background-color: rgba(255, 255, 255, .45); }
+
+.site-nav b { font-size: 17px; font-weight: 700; letter-spacing: .06em; }
+.site-nav small { font-size: 14px; font-weight: 500; letter-spacing: .04em; }
+
+/* 手機底部快捷列（桌機隱藏） */
+.mobile-bar { display: none; }
+
+/* ---------- Hero ---------- */
+.hero img { width: 100%; height: auto; }
+
+/* ---------- 共用：區塊標題 ---------- */
+.sec-mark {
+  padding: 4.5vw 0 0;
+  text-align: center;
+}
+
+.sec-mark .char {
+  width: 46px;
+  height: auto;
+  margin: 0 auto 6px;
+}
+
+.sec-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 87%;
+  margin: 0 auto;
+}
+
+.sec-line::before,
+.sec-line::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.sec-line span {
+  padding: 0 14px;
+  border-left: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+  font-size: clamp(14px, 1.25vw, 20px);
+  font-weight: 700;
+  letter-spacing: .2em;
+  line-height: 1.3;
+}
+
+.eyebrow {
+  margin: 0 0 .9em;
+  color: var(--gold);
+  font-size: clamp(10px, .75vw, 13px);
+  font-weight: 500;
+  letter-spacing: .4em;
+}
+
+.headline {
+  margin: 0 0 .9em;
+  font-size: clamp(24px, 2.6vw, 44px);
+  font-weight: 700;
+  letter-spacing: .04em;
+  line-height: 1.35;
+}
+
+.body-text {
+  margin: 0;
+  font-size: clamp(15px, 1.05vw, 18px);
+  line-height: 2;
+  letter-spacing: .05em;
+  color: rgba(255, 255, 255, .92);
+}
+
+/* ---------- 照片 + 疊字區塊（交通、能量） ---------- */
+.photo-block { position: relative; }
+
+.photo-block .photo { width: 100%; height: auto; }
+
+.photo-block .overlay { position: absolute; }
+
+/* 交通樞紐：文字在左上天空 */
+.traffic .overlay {
+  top: 0;
+  left: 8.25%;
+  width: 36%;
+}
+
+/* 能量聚場：數據圓圈在左、文字在右 */
+.energy .overlay.text {
+  top: 0;
+  left: 55%;
+  width: 34%;
+}
+
+.energy .overlay.stats {
+  top: 1.8%;
+  left: 10%;
+}
+
+.stats-row {
+  display: flex;
+  gap: 1.4vw;
+}
+
+.stat {
+  width: 12vw;
+  height: 12vw;
+  border: 1px solid rgba(255, 255, 255, .85);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .9vw;
+}
+
+.stat img { width: 72%; height: auto; }
+
+.stat span {
+  font-size: clamp(12px, 1.05vw, 18px);
+  letter-spacing: .08em;
+}
+
+/* ---------- 置中文字區塊（勢、器） ---------- */
+.center-copy {
+  width: 86%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 4.2vw 0 5.5vw;
+  text-align: center;
+}
+
+/* ---------- 影片 ---------- */
+.video-block {
+  position: relative;
+  background: #000;
+}
+
+.video-block video {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  display: block;
   object-fit: cover;
 }
 
-/* 針對 iPhone 的特定樣式 */
-@supports (-webkit-touch-callout: none) {
-  .video-wrapper iframe {
-      width: 100% !important;
-      height: 100% !important;
-      min-height: auto !important;
-      min-width: auto !important;
-      object-fit: cover !important;
-  }
+.video-toggle {
+  position: absolute;
+  right: 2%;
+  bottom: 4%;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, .7);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, .35);
+  color: #fff;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
 }
 
-
-.form {
-padding: 20px 0 100px 0;
+/* ---------- 公設實績圖 ---------- */
+.amenities {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .5vw;
 }
 
-.form_item {
-margin-bottom: 20px;
+.amenities figure {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 1320 / 970;
+  overflow: hidden;
 }
 
-/* 防機器人隱藏欄位（不可用 display:none，部分機器人會略過） */
+.amenities img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.amenities figcaption {
+  position: absolute;
+  right: 3%;
+  bottom: 3%;
+  font-size: clamp(11px, .8vw, 14px);
+  letter-spacing: .1em;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, .7);
+}
+
+/* ---------- 結尾主視覺 ---------- */
+.closing { margin-top: 8vw; }
+.closing img { width: 100%; height: auto; }
+
+/* ---------- 預約表單 ---------- */
+.booking {
+  padding: 5vw 0 3vw;
+  text-align: center;
+}
+
+.booking-title {
+  margin: 0 0 2.4vw;
+  font-size: clamp(26px, 2.6vw, 44px);
+  font-weight: 700;
+  letter-spacing: .12em;
+}
+
+#bookingForm {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 24px;
+  width: 90%;
+  max-width: 820px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.field label {
+  flex: 0 0 auto;
+  font-size: clamp(16px, 1.25vw, 21px);
+  letter-spacing: .08em;
+  white-space: nowrap;
+}
+
+.field input,
+#remark {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  height: 42px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 0;
+  background: #fff;
+  color: #222;
+  font-size: 16px;   /* 16px 以上避免 iOS 自動放大 */
+}
+
+.field input:focus,
+#remark:focus { outline: 2px solid var(--yellow); outline-offset: 0; }
+
+.form-right { display: flex; flex-direction: column; }
+
+#remark {
+  height: 138px;
+  resize: vertical;
+  margin-bottom: 14px;
+  font-size: 15px;
+}
+
+#remark::placeholder { color: #888; }
+
 .form_hp {
-position: absolute;
-left: -9999px;
-width: 1px;
-height: 1px;
-overflow: hidden;
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 
-/* 企劃銷售：地圖上方，桌機 5rem；視窗不夠寬時依寬度縮小（約留左右各 50px），維持一列 */
-.form_credit {
-padding-bottom: 100px;
-text-align: center;
-color: #ffffff;
-white-space: nowrap;
-font-size: min(5rem, calc((100vw - 100px) / 16));
-line-height: 1.2;
+/* 同意勾選（圓形） */
+.checkbox_item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding-left: 30px;
+  margin-bottom: 14px;
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
 }
 
-.form-check {
-display: -webkit-box;
-display: -ms-flexbox;
-display: flex;
--webkit-box-pack: center;
-    -ms-flex-pack: center;
-        justify-content: center;
-}
-.form-check a {
-text-decoration: none;
-color: #c43c27;
-}
+.checkbox_item a { color: var(--yellow); text-decoration: none; margin-left: 4px; }
+.checkbox_item a:hover { text-decoration: underline; }
 
-.form-control,
-.form-select {
-border: 0;
-border-radius: 2px;
--webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.07);
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.07);
-padding: 0.7rem 1.3rem;
-}
-
-textarea.form-control {
-border-radius: 2px;
+.checkbox_item input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
 .checkmark {
-position: absolute;
-top: 0;
-left: 0;
-height: 25px;
-width: 25px;
-background-color: #eee;
-border: 1px solid #d3d3d3;
-border-radius: 100px;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  border-radius: 50%;
+  background: #fff;
 }
 
-.checkbox_item {
-position: relative;
-cursor: pointer;
--webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-        user-select: none;
-padding-left: 2rem;
-}
-.checkbox_item a {
-text-decoration: none;
-color: #C39B62;
+.checkbox_item input:focus-visible ~ .checkmark { outline: 2px solid var(--yellow); }
+
+.checkbox_item input:checked ~ .checkmark::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--navy);
 }
 
-.checkbox_item input {
-position: absolute;
-opacity: 0;
-cursor: pointer;
-height: 0;
-width: 0;
+#sendMail {
+  width: 100%;
+  height: 42px;
+  border: 0;
+  border-radius: 0;
+  background: var(--yellow);
+  color: #1a1a1a;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: .15em;
+  cursor: pointer;
+  transition: filter .2s;
 }
 
-.checkbox_item:hover input ~ .checkmark {
-background-color: #ccc;
+#sendMail:hover { filter: brightness(1.06); }
+#sendMail:disabled { opacity: .6; cursor: wait; }
+
+/* 聯絡資訊 */
+.contact {
+  margin: 5vw 0 0;
+  font-size: clamp(20px, 1.9vw, 32px);
+  font-weight: 500;
+  line-height: 1.75;
+  letter-spacing: .06em;
 }
 
-.checkbox_item input:checked ~ .checkmark {
-background-color: #3a3a3a;
-border-radius: 3px;
+.contact p { margin: 0; }
+.contact .sep { margin: 0 .35em; font-weight: 300; opacity: .8; }
+
+.contact .tel {
+  color: var(--yellow);
+  font-size: 1.32em;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: .04em;
 }
 
-.checkmark:after {
-content: "";
-position: absolute;
-display: none;
+.credits {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  gap: 10px 9vw;
+  margin: 4.5vw auto 0;
+  padding: 0 16px;
+  list-style: none;
+  text-align: left;
+  font-size: clamp(13px, 1vw, 17px);
+  letter-spacing: .05em;
 }
 
-.checkbox_item input:checked ~ .checkmark:after {
-display: block;
+/* ---------- 地圖 + 頁尾 ---------- */
+.map-block { position: relative; margin-top: 2vw; }
+
+.map-block .footer-bg { width: 100%; height: auto; }
+
+.map-frame {
+  position: absolute;
+  left: 7.25%;
+  top: 7.24%;
+  width: 83.75%;
+  height: 69.08%;
 }
 
-.checkbox_item .checkmark:after {
-left: 8px;
-top: 3px;
-width: 7px;
-height: 13px;
-border: solid white;
-border-width: 0 3px 3px 0;
--webkit-transform: rotate(45deg);
-        transform: rotate(45deg);
+.map-frame iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
 }
 
-.btn-primary {
-background: #C39B62;
-border-color: #C39B62;
-border-radius: 100px;
-}
-.btn-primary:hover, .btn-primary:focus {
-background: #93754b;
-border-color: #93754b;
-}
+.footer-strip { display: none; width: 100%; height: auto; }
 
-.contact_btn {
-display: -webkit-box;
-display: -ms-flexbox;
-display: flex;
--webkit-box-align: center;
-    -ms-flex-align: center;
-        align-items: center;
-background: #fff;
-border-radius: 12px;
--webkit-box-pack: center;
-    -ms-flex-pack: center;
-        justify-content: center;
-padding: 18px 12px;
-color: #000;
-text-decoration: none;
-height: 100%;
--webkit-transition: 0.4s ease;
-transition: 0.4s ease;
-}
-.contact_btn img {
-height: 32px;
-margin-right: 12px;
--webkit-filter: brightness(1);
-        filter: brightness(1);
--webkit-transition: 0.4s ease;
-transition: 0.4s ease;
-}
-@media (max-width: 575px) {
-.contact_btn img {
-    height: 24px;
-    margin-right: 8px;
-}
-}
-
-a.contact_btn:hover {
-background: #93754b;
-color: #fff;
-}
-a.contact_btn:hover img {
--webkit-filter: brightness(10);
-        filter: brightness(10);
-}
-
-
-.modal .modal-body {
-padding: 32px;
-}
+/* ---------- 隱私權 Modal ---------- */
+.modal { color: #000; }
+.modal .modal-body { padding: 32px; }
 .modal .modal-body h3 {
-font-size: 1.1rem;
-color: #93754b;
-font-weight: bold;
-margin-top: 2rem;
+  font-size: 1.1rem;
+  color: #93754b;
+  font-weight: bold;
+  margin-top: 2rem;
 }
-.modal .modal-body li {
-margin-bottom: 8px;
-color: #000;
-}
-.modal .modal-body p {
-color: #000;
-}
-@media (max-width: 992px) {
-.modal .modal-body {
-    padding: 24px;
-}
-}
-@media (max-width: 768px) {
-.modal .modal-body {
-    padding: 16px;
-}
+.modal .modal-body li { margin-bottom: 8px; }
+
+/* =========================================================
+   平板以下：文字改到照片上方，照片保留滿版
+   ========================================================= */
+@media (max-width: 1199px) {
+  .site-nav a { min-width: 100px; padding: 0 8px; }
+  .site-nav b { font-size: 15px; }
+  .site-nav small { font-size: 12px; }
+  .brand { gap: 14px; }
+  .brand span { display: none; }
 }
 
-.map-container {
-    position: relative;
-    width: 100vw;
-    height: 100vh; /* 可以根据需要调整高度 */
+@media (max-width: 991px) {
+  :root { --header-h: 58px; }
+
+  /* 手機：頂部列隨頁面捲走（底部已有快捷列），節省畫面空間 */
+  html { scroll-padding-top: 0; }
+  body { padding-top: 0; }
+  .site-header { position: relative; }
+  .brand img { height: 30px; }
+  .site-nav { display: none; }
+
+  .mobile-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    background: linear-gradient(90deg, #e9ecef, #cfd4dc);
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, .3);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .mobile-bar a {
+    padding: 9px 2px 8px;
+    border-left: 1px solid rgba(255, 255, 255, .8);
+    color: var(--brand);
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    line-height: 1.25;
+  }
+
+  .mobile-bar a:first-child { border-left: 0; }
+  .mobile-bar small { display: block; font-size: 10px; font-weight: 500; }
+
+  body { padding-bottom: 54px; }
+
+  .sec-mark { padding-top: 56px; }
+  .sec-line { width: 92%; }
+
+  .photo-block .overlay,
+  .energy .overlay.text,
+  .energy .overlay.stats {
+    position: static;
+    width: auto;
+    padding: 36px 6% 28px;
+  }
+
+  .energy .overlay.stats { padding-bottom: 8px; }
+
+  .stats-row { justify-content: center; gap: 3vw; }
+
+  .stat {
+    width: 28vw;
+    height: 28vw;
+    max-width: 200px;
+    max-height: 200px;
+    gap: 2vw;
+  }
+
+  .stat span { font-size: clamp(11px, 3.2vw, 16px); }
+
+  .center-copy { padding: 32px 0 40px; }
+  .center-copy br { display: none; }
+
+  .amenities { grid-template-columns: 1fr; gap: 6px; }
+
+  .closing { margin-top: 56px; }
+  .booking { padding-top: 48px; }
+  .booking-title { margin-bottom: 28px; }
+
+  .contact { margin-top: 44px; }
+  .credits { margin-top: 36px; gap: 8px 6vw; }
+
+  .map-block .footer-bg { display: none; }
+
+  .map-frame {
+    position: static;
+    width: 92%;
+    height: 320px;
+    margin: 0 auto;
+  }
+
+  .footer-strip { display: block; margin-top: 8px; }
 }
 
-.map-container iframe {
-    width: 100%;
-    height: 100%;
-    border: 0;
+@media (max-width: 640px) {
+  #bookingForm { grid-template-columns: 1fr; width: 88%; }
+  .field label { width: 5em; }
+  .contact .label { display: block; font-size: .8em; opacity: .85; }
+  .contact .sep { display: none; }
+  .credits { grid-template-columns: 1fr; text-align: center; }
+  .modal .modal-body { padding: 16px; }
 }

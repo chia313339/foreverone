@@ -1,7 +1,7 @@
 # CLAUDE.md — 恆ONE 建案行銷網站
 
 > 本檔記錄專案重點架構，供日後（含 Claude）快速進入狀況。
-> 最後更新：2026-11-03
+> 最後更新：2026-11-18（v2 改版：依設計稿 20261117 全面重做版面，地圖與表單維持）
 
 ## 專案簡介
 
@@ -18,7 +18,7 @@
 | 類別 | 內容 |
 | --- | --- |
 | 核心 | 原生 HTML + CSS + JavaScript（無打包工具） |
-| UI 框架 | Bootstrap 5（含 Carousel 輪播、Modal 彈窗） |
+| UI 框架 | Bootstrap 5（僅用 Modal 彈窗；版面為自寫 CSS） |
 | 滾動動畫 | AOS 2.3.1（CDN 載入） |
 | 提示彈窗 | SweetAlert2 11（CDN 載入） |
 | jQuery | 3.7.1（僅表單送出用） |
@@ -42,33 +42,42 @@ foreverone/
 │   ├── jquery-3.7.1.min.js
 │   ├── bootstrap.bundle.min.js
 │   └── swiper-bundle.min.js     ← 保留檔但已不載入（部署排除）
-├── img/                ← section1~12 版面切圖。**.png = 原始素材（不部署）、.webp = 正式上線用**
+├── img/                ← v2 切圖（hero / traffic / energy / banner / footer_* / stat* / char_* / amenity*）
+│   └── _old_v1/        ← 舊版圖片（不部署）
+├── video/aerial.mp4    ← 成屋外觀空拍影片（壓縮版，約 4MB）
 ├── firebase.json       ← 部署設定（public = ".", 鎖定 target、快取標頭、排除清單）
 ├── .firebaserc         ← 專案/站台綁定
 ├── FIREBASE_DEPLOY.md  ← 完整部署文件（部署前必讀）
 ├── Dockerfile          ← nginx 靜態服務（備用）
-└── optimize_images.py  ← 圖片最佳化工具（PNG→WebP，macOS/需 Pillow，可重跑）
+├── optimize_images.py  ← 圖片最佳化工具（PNG→WebP，macOS/需 Pillow，可重跑）
+└── build_v2_assets.py  ← v2 設計稿切圖腳本（不部署）
 ```
 
-## 頁面結構（index.html，由上而下）
+## 頁面結構（index.html，由上而下）— v2（2026-11-18）
 
-頁面是一連串**滿版設計切圖**（`.section_back`）疊加文字／元件組成：
+設計稿來源：`~/Downloads/LUNG/20261117-中悦恆ONE-一頁式網站-製作檔/`（整頁 4000×22132 JPG + .ai + 空拍影片 + 公設實績照片）。
+v2 改為「**照片切圖 + 真實 HTML 文字**」：照片上的文案已從切圖中修補掉，改用 HTML 疊在照片上（桌機 ≥992px），手機則改成「文字在上、照片在下」，文字可讀且利於 SEO。
 
-1. Hero — 背景圖 + 中悅建設 logo + 案名 logo（AOS 淡入）
-2. section2 — 背景圖 + 疊加文字圖
-3. 純文字段落（商辦商場豪宅全面開發）
-4. section3 ~ section6 — 滿版圖
-5. **Bootstrap Carousel**（section71~74，3D 公設示意圖輪播）
-6. 純文字段落（恆ONE 介紹）
-7. **YouTube 影片**（iframe，影片 ID `pWzbawpvB9Y`，自動播放／靜音／循環）
-8. section8 ~ section9 — 滿版圖
-9. **預約表單**（姓名 / 電話 / Email / 坪數 / 備註 + 隱私權同意 checkbox）
-10. section10 — 滿版圖
-11. **Google Maps** 嵌入地圖
-12. section12 — 滿版圖（頁尾）
-13. 隱私權聲明 Modal
+1. **Header**（sticky）— `logo_header.webp`（透明）+ 貴賓專線／粉絲專頁／線上諮詢／地圖導航／立即預約；手機改為底部固定快捷列 `.mobile-bar`
+2. **Hero** — `hero.webp`（主視覺含文字，整張切圖）
+3. **運｜交通樞紐** — `traffic.webp`（區位標註保留在圖上）+ HTML 文案疊左上
+4. **能｜能量聚場** — `energy.webp` + 數據圓圈（數字為透明切圖 `stat1~3.webp`，圓框／標籤為 CSS）+ HTML 文案
+5. **勢｜立面神韻** — HTML 文案 + 空拍影片 `video/aerial.mp4`（自架，捲到才載入、離開即暫停，右下有播放/暫停鈕）
+6. **器｜寰宇公設** — HTML 文案 + 三張公設實績照 `amenity1~3.webp`
+7. **結尾主視覺** — `banner.webp`（含文字整張切圖）
+8. **線上預約賞屋表單**（欄位 ID 不變）+ 接待會館地址／電話 + 四家公司資訊
+9. **Google Maps**（同原 embed）— 桌機疊在 `footer_bg.webp` 的框位上；手機改 `footer_strip.webp`
+10. 隱私權聲明 Modal（內容不變）
 
-> 內容以「圖片」為主：改文案／視覺多半要重新出圖再替換 `img/` 對應檔，而非改 HTML 文字。
+- PC 版導覽列 `position: fixed` 置頂（body 有 `overflow-x:hidden`，sticky 會失效）；手機版頂部列隨頁捲走。
+- 區塊標題（書法字 `char_*.webp` + 線條標題）、`NOW FOREVER ONE` 金色小字皆為 CSS／HTML。
+- 色票：底色 `#0c1b38`、金 `#d6b07a`、送出鈕／電話黃 `#f5d169`、Logo 藍 `#182c71`（定義在 `main.css` `:root`）。
+- 切圖重做方式：`build_v2_assets.py`（不部署）——從設計稿裁切、修補照片上的文字背景（逐列左右取樣內插）、抽出透明數字／Logo、轉 webp；影片用 ffmpeg 1280px／1Mbps 兩段編碼（79MB → 4MB，已去音軌）。
+- 粉絲專頁：https://www.facebook.com/share/1A5wwkQuvr/（2026-11-18 已放入）。
+- ⚠️ **TODO**：LINE@ 網址業主尚未提供，目前為 `href="#" data-todo="line"`（點擊跳「敬請期待」提示）。拿到網址後在 `index.html` 桌機選單與手機底部列各改一處，並加 `target="_blank" rel="noopener"`。
+- 舊版 v1 圖片已搬到 `img/_old_v1/`（已排除部署）。
+
+> 主視覺／結尾圖／交通標註仍是「文字烘在圖上」，改這些文案需重新出圖。
 
 ## 表單資料流（重要 — 含雲端後端）
 
@@ -121,7 +130,7 @@ firebase deploy --only hosting:foreverone --project dwtlung
 ## 本機預覽
 
 純靜態，直接用瀏覽器開 `index.html` 即可預覽版面。
-（YouTube 影片、Google Maps、表單送出需實際網路才會作用。）
+建議用 `python3 -m http.server` 開本機伺服器預覽（影片延遲載入需 http）。Google Maps、表單送出需實際網路才會作用。
 
 ## 流量 / 圖片最佳化（重要 — Firebase 以流量計費）
 

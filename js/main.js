@@ -1,7 +1,62 @@
 document.addEventListener('DOMContentLoaded', function() {
     AOS.init({
-        once: true     // 只執行一次動畫
+        once: true,    // 只執行一次動畫
+        offset: 60
     });
+    initAerialVideo();
+});
+
+// 空拍影片：捲到附近才載入（省 Firebase 流量），離開畫面就暫停
+function initAerialVideo() {
+    const video = document.getElementById('aerialVideo');
+    if (!video) return;
+    const source = video.querySelector('source[data-src]');
+    const toggle = document.querySelector('.video-toggle');
+    let loaded = false;
+    let userPaused = false;
+
+    function setToggle() {
+        if (!toggle) return;
+        toggle.textContent = video.paused ? '▶' : '❚❚';
+        toggle.setAttribute('aria-label', video.paused ? '播放影片' : '暫停影片');
+    }
+    function load() {
+        if (loaded) return;
+        loaded = true;
+        source.src = source.dataset.src;
+        video.load();
+    }
+    function play() {
+        load();
+        const p = video.play();
+        if (p && p.catch) p.catch(function () {});
+    }
+
+    setToggle();
+    video.addEventListener('play', setToggle);
+    video.addEventListener('pause', setToggle);
+    if (toggle) {
+        toggle.addEventListener('click', function () {
+            if (video.paused) { userPaused = false; play(); }
+            else { userPaused = true; video.pause(); }
+        });
+    }
+
+    if (!('IntersectionObserver' in window)) { play(); return; }
+    new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (entry.isIntersecting) { if (!userPaused) play(); }
+            else if (!video.paused) video.pause();
+        });
+    }, { threshold: 0.25 }).observe(video);
+}
+
+// 粉專 / LINE@ 網址尚未設定時，點擊給提示而非跳頁
+document.addEventListener('click', function (e) {
+    const a = e.target.closest('a[data-todo]');
+    if (!a || a.getAttribute('href') !== '#') return;
+    e.preventDefault();
+    Swal.fire({ title: '敬請期待', text: '歡迎來電 03-315-1313 洽詢', icon: 'info', confirmButtonColor: '#b0964e', confirmButtonText: '關閉' });
 });
 
 // 禁止右鍵
@@ -98,6 +153,6 @@ $('#bookingForm').on('submit', function (e) {
         })
         .finally(function () {
             submitting = false;
-            $('#sendMail').prop('disabled', false).text('送出');
+            $('#sendMail').prop('disabled', false).text('送出表單');
         });
 });
