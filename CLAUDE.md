@@ -74,7 +74,8 @@ v2 改為「**照片切圖 + 真實 HTML 文字**」：照片上的文案已從�
 - 色票：底色 `#0c1b38`、金 `#d6b07a`、送出鈕／電話黃 `#f5d169`、Logo 藍 `#182c71`（定義在 `main.css` `:root`）。
 - 切圖重做方式：`build_v2_assets.py`（不部署）——從設計稿裁切、修補照片上的文字背景（逐列左右取樣內插）、抽出透明數字／Logo、轉 webp；影片用 ffmpeg 1280px／1Mbps 兩段編碼（79MB → 4MB，已去音軌）。
 - 粉絲專頁：https://www.facebook.com/share/1A5wwkQuvr/（2026-11-18 已放入）。
-- ⚠️ **TODO**：LINE@ 網址業主尚未提供，目前為 `href="#" data-todo="line"`（點擊跳「敬請期待」提示）。拿到網址後在 `index.html` 桌機選單與手機底部列各改一處，並加 `target="_blank" rel="noopener"`。
+- LINE@：https://line.me/R/ti/p/@269xyofx（2026-11-25 放入；業主給的網址含 fbclid 等追蹤參數，已去除）。
+- 兩個連結在 `index.html` 桌機選單與手機底部列各一處。`main.js` 仍保留 `a[data-todo][href="#"]` 的「敬請期待」提示，日後有尚未上線的連結可沿用。
 - 舊版 v1 圖片已搬到 `img/_old_v1/`（已排除部署）。
 
 > 主視覺／結尾圖／交通標註仍是「文字烘在圖上」，改這些文案需重新出圖。
