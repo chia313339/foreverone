@@ -10,6 +10,7 @@
       "Dockerfile",
       "optimize_images.py",
       "build_v2_assets.py",
+      "tools/**",
       "package-lock.json",
       "README.md",
       "FIREBASE_DEPLOY.md",

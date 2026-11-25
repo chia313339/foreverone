@@ -1,6 +1,9 @@
 """v2 切圖腳本：從設計稿整頁 JPG 產生網站用 webp（2026-11-18）
 用法：
-  python3 build_v2_assets.py "<設計稿.jpg>" "<公設實績圖資料夾>" <輸出資料夾>
+  python3 build_v2_assets.py "<設計稿.jpg>" "<公設實績圖資料夾>" <輸出資料夾> [<AI 修正片段資料夾>]
+第 4 個參數（選用，2026-11-25 坪數 72-511 → 74-516）：資料夾內放 ai_hero.png（第 1640~1820 列）、
+ai_banner.png（第 17120~17320 列），為 tools/render_ai.swift 從 1125 版 AI 檔以 4000px 寬輸出的片段，
+會只把坪數數字區塊貼回設計稿再切圖。
 需 Pillow、numpy、scipy。座標以設計稿 4000px 寬為準，若設計稿改版需重新量測。
 """
 import sys, os
@@ -9,6 +12,12 @@ from PIL import Image
 Image.MAX_IMAGE_PIXELS=None
 SRC=sys.argv[1]; PH=sys.argv[2]; OUT=sys.argv[3]
 im=Image.open(SRC).convert('RGB'); A=np.asarray(im).astype(np.float32)
+if len(sys.argv)>4:
+    PATCH=sys.argv[4]
+    for name,y0,x0,x1 in [('ai_hero',1640,2150,2740),('ai_banner',17120,2280,2790)]:
+        P=np.asarray(Image.open(os.path.join(PATCH,name+'.png')).convert('RGB')).astype(np.float32)
+        A[y0:y0+P.shape[0],x0:x1]=P[:,x0:x1]
+        print('patched',name)
 
 def inpaint(arr, box, ls, rs):
     x0,y0,x1,y1=box
