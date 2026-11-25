@@ -66,7 +66,7 @@ v2 改為「**照片切圖 + 真實 HTML 文字**」：照片上的文案已從�
 6. **器｜寰宇公設** — HTML 文案 + 三張公設實績照 `amenity1~3.webp`
 7. **結尾主視覺** — `banner_1125.webp`（含文字整張切圖）
 8. **線上預約賞屋表單**（欄位 ID 不變）+ 接待會館地址／電話 + 四家公司資訊
-9. **Google Maps**（同原 embed）— 桌機疊在 `footer_bg.webp` 的框位上；手機改 `footer_strip.webp`
+9. **Google Maps**（嵌入地圖，圖釘在「恆ONE」）— 桌機疊在 `footer_bg.webp` 的框位上；手機改 `footer_strip.webp`
 10. 隱私權聲明 Modal（內容不變）
 
 - PC 版導覽列 `position: fixed` 置頂（body 有 `overflow-x:hidden`，sticky 會失效）；手機版頂部列隨頁捲走。
@@ -80,7 +80,7 @@ v2 改為「**照片切圖 + 真實 HTML 文字**」：照片上的文案已從�
 - **2026-11-25 業主修正**：
   - 品牌字一律用「中**悦**」（業主指定，網頁文字全部改為悦；設計稿圖片本來就是悦）。
   - 坪數改為 **74-516 坪**：HTML 文字已改；主視覺與結尾圖的數字是從 `~/Downloads/LUNG/1125/` 的新版 AI 檔（PDF 相容）用 `tools/render_ai.swift` 以 4000px 寬輸出該行，只貼回數字區塊（見 `build_v2_assets.py` 第 4 個參數）。新圖改檔名 `*_1125.webp` 以避開 7 天快取；`og:image` 加 `?v=20261125` 讓 LINE/FB 重抓。
-  - 「地圖導航」連結改為業主提供的 https://maps.app.goo.gl/64zscqAvVwX4Ap2YA（桌機選單與手機底部列）；嵌入地圖未改。
+  - 「地圖導航」連結改為業主提供的 https://maps.app.goo.gl/64zscqAvVwX4Ap2YA（桌機選單與手機底部列）；嵌入地圖也改為釘在 Google 地點「恆ONE」（有恆路881號，place ID `0x34681f004db6950b:0x3c132e550686093c`，2026-11-25）。
 
 > 主視覺／結尾圖／交通標註仍是「文字烘在圖上」，改這些文案需重新出圖。
 
